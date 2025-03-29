@@ -17,7 +17,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         const repoOwner = 'collabphp'; // Your GitHub username
         const repoName = 'collab.github.io'; // Your repository name
         const branch = 'root'; // Your branch name
-        const token = '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'; // Replace with your new GitHub Personal Access Token
+        const token = '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'; // Replace with your new GitHub Personal Access Token
 
         const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/uploads/${fileName}`;
 
