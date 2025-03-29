@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dosya Yükleme</title>
+</head>
+<body>
+    <h1>Dosya Yükleme</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Yükle</button>
+    </form>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Sayfa yeniden yüklenmesin
+            const formData = new FormData();
+            formData.append('file', document.getElementById('file').files[0]);
+
+            fetch('/upload', {  // Burada backend'e POST isteği gönderiyoruz
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Yükleme başarılı: ' + data.message);
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+            });
+        });
+    </script>
+</body>
+</html>
