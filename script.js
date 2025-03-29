@@ -14,17 +14,17 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
         const content = btoa(reader.result); // Convert file content to Base64
 
         const fileName = file.name;
-        const repoOwner = 'collabphp'; // Replace with your GitHub username
-        const repoName = 'collab.github.io'; // Replace with your repository name
-        const branch = 'root'; // Replace with your branch name
-        const token = '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'; // Replace with your GitHub Personal Access Token
+        const repoOwner = 'collabphp'; // Your GitHub username
+        const repoName = 'collab.github.io'; // Your repository name
+        const branch = 'root'; // Your branch name (ensure this is correct)
+        const token = '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'; // Your GitHub Personal Access Token
 
         const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/uploads/${fileName}`;
 
         const response = await fetch(url, {
             method: 'PUT',
             headers: {
-                'Authorization': `token ${token}`,
+                'Authorization': `Bearer ${token}`, // Updated to use Bearer
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
