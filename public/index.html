@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dosya Yapısı</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
+</head>
+<body>
+  <h1>Dosya Yapısı</h1>
+  <div id="fileTree"></div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+  <script>
+    // Dosya yapısını API'den çekme
+    $.get('/api/files', function(data) {
+      // jsTree ile dosya ağaç yapısını oluşturma
+      $('#fileTree').jstree({
+        'core': {
+          'data': data
+        }
+      });
+    });
+  </script>
+</body>
+</html>
