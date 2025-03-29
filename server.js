@@ -1,55 +1,30 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+
 const app = express();
+const port = 3000;
 
-// Yükleme yapılacak klasör
-const uploadDirectory = path.join(__dirname, 'uploads');
-
-// Klasör yoksa oluştur
-if (!fs.existsSync(uploadDirectory)) {
-  fs.mkdirSync(uploadDirectory);
-}
-
-// Multer yapılandırması: Dosyaları 'uploads' klasörüne kaydedeceğiz
+// Multer ile dosya yükleme yapılandırması
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDirectory);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Dosya ismi olarak zaman damgası kullanılabilir
-  },
+    destination: function (req, file, cb) {
+        cb(null, './uploads'); // Dosyaların kaydedileceği dizin
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)); // Dosya adını benzersiz yap
+    }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
-// Dosya yükleme endpoint'i
-app.post('/upload', upload.array('files'), (req, res) => {
-  res.json({ message: 'Dosyalar başarıyla yüklendi', files: req.files });
+// Dosya yükleme route'u
+app.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('Dosya yüklenmedi.');
+    }
+    res.status(200).json({ message: 'Dosya başarıyla yüklendi.' });
 });
 
-// Dosya yapısını çekmek için bir endpoint
-app.get('/api/files', (req, res) => {
-  const getFiles = (dirPath) => {
-    const items = fs.readdirSync(dirPath);
-    return items.map(item => {
-      const fullPath = path.join(dirPath, item);
-      const stats = fs.statSync(fullPath);
-      
-      return {
-        text: item,
-        type: stats.isDirectory() ? 'folder' : 'file',
-        children: stats.isDirectory() ? getFiles(fullPath) : [],
-      };
-    });
-  };
-
-  const fileStructure = getFiles(uploadDirectory);
-  res.json(fileStructure);
-});
-
-// Sunucuyu başlat
-app.listen(3000, () => {
-  console.log('Sunucu çalışıyor: http://localhost:3000');
+app.listen(port, () => {
+    console.log(`Server ${port} numaralı portta çalışıyor.`);
 });
